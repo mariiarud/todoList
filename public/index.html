@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="./styles/default.css">
+    <script src="./javascript/taskTable.js"></script>
+    <script src="./javascript/listTable.js"></script>
+    <script src="./javascript/server.js"></script>
+    <script src="./javascript/Task.js"></script>
+    <script src="./javascript/TaskList.js"></script>
+</head>
+<body onload="loadTasks()">
+    <div style="text-align: center;">
+        <div id="lists">
+            <div>
+                <form onSubmit="return createNewTaskList()">
+                        <input type="text" id="newList" name="newList" >
+                        <input type="submit" value="+">
+                </form>
+            </div>
+            <div style="text-align:center">
+                    <table id="listTable" class="tasksTable">
+                    </table>
+            </div>
+        </div>
+        <div id="taskList">
+            <div style="text-align:center;">
+                <h2 id="listName"></h2>
+                <form onSubmit="return createNewTask()">
+                    <input type="text" id="newTask" name="newTask" size="45">
+                    <input type="submit" value="+">
+                </form>
+            </div>
+            <div style="text-align:center">
+                <table id="tasksTable" class="tasksTable">
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
