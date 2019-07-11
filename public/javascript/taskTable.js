@@ -9,7 +9,6 @@ function createNewTask(){
         tasks.set(newTask.id, newTask);
         createTaskInTable(newTask);
         clearInputFild();
-        addNewElement(TASKS_URL, newTask);
 
         saveChanges();
     }
