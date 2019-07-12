@@ -1,3 +1,13 @@
+function getData(url = '') {
+    return fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }    
+    })
+    .then(response => response.json()); 
+}
+
 function postData(url = '', data = {}) {
     return fetch(url, {
         method: 'POST',
@@ -13,7 +23,7 @@ function deleteDataById(url = '', id = '') {
     return fetch(`${url}/${id}`, {
         method: 'DELETE'
     })
-    .then(res => res.json());
+    .then(response => response.json());
 }
 
 function putDataById(url = '', id = '' , data = {}) {
@@ -27,6 +37,31 @@ function putDataById(url = '', id = '' , data = {}) {
     .then(response => response.json()); 
 }
 
+function getTasks(url){
+    getData(url)
+    .then((data) => {
+        data.forEach(function(task){
+            console.log(task);
+            tasks.set(task.id, task);
+        });
+    })
+    .catch(error => console.error(error));
+}
+
+function getLists(url){
+    getData(url)
+    .then((data) => {
+        data.forEach(function(list){
+            console.log(list);
+            taskLists.set(list.id, list);
+        });
+
+        if(taskLists.size > 0){
+            selectFirstList();
+        }
+    })
+    .catch(error => console.error(error));
+}
 
 function addNewElement(url, element){
     postData(url, element)
@@ -46,22 +81,14 @@ function putElement(url, element){
     .catch(error => console.error(error));
 }
 
+// ///////////////////////////////////////////////////////////////////////////////
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-function saveChanges(){
-    localStorage.myLists = JSON.stringify(Array.from(taskLists.entries()));
-    localStorage.myTasks = JSON.stringify(Array.from(tasks.entries()));
-}
+// function saveChanges(){
+//     localStorage.myLists = JSON.stringify(Array.from(taskLists.entries()));
+//     localStorage.myTasks = JSON.stringify(Array.from(tasks.entries()));
+// }
 
 function loadTasks(){
-    taskLists = new Map(JSON.parse(localStorage.myLists));
-    tasks = new Map(JSON.parse(localStorage.myTasks));
-
-    if(taskLists.size > 0){
-        currentTaskListId = taskLists.values().next().value.id;
-        updateListTable();
-        updateTaskTable();
-    }
+    getTasks(TASKS_URL);
+    getLists(LISTS_URL);
 }

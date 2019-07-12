@@ -1,5 +1,4 @@
 var tasks = new Map();
-var isEditMod = false;
 const TASKS_URL = "http://localhost:3000/tasks"
 
 function createNewTask(){
@@ -36,6 +35,7 @@ function createTaskInTable(task){
     var tr = table.insertRow();
     tr.id = "taskTr"+task.id;
     var td = tr.insertCell();
+    td.className = "task_table_td";
     td.appendChild(createTaskDivElement(task));
 }
 
@@ -50,42 +50,41 @@ function getCurrentTasks(){
 
 function createTaskDivElement(task){
     var mainDiv = document.createElement("div");
-    mainDiv.className = "taskDiv";
+    mainDiv.className = "task_main_div";
 
     var taskElementDiv = document.createElement("div");
-    taskElementDiv.className = "taskElementDiv";
+    taskElementDiv.className = "task_element_div";
 
     var taskCompletedCheck = document.createElement("input");
-    taskCompletedCheck.className = "taskCompletedCheck";
+    taskCompletedCheck.className = "task_completed_checkbox";
     taskCompletedCheck.type = "checkbox";
     taskCompletedCheck.checked = task.isCompleted;
     taskCompletedCheck.addEventListener("click", function(){ checkTask(task.id); });
     
     let textTaskDiv = document.createElement("div");
-    textTaskDiv.className = "taskTextDiv";
+    textTaskDiv.className = "task_text_div";
     textTaskDiv.innerHTML = task.text;
     textTaskDiv.id = "textTaskDiv"+task.id;
     textTaskDiv.addEventListener("click", function() { startEditTask(task.id);} );
 
     var delateTaskDiv = document.createElement("div");
-    delateTaskDiv.className = "taskControlButton";
+    delateTaskDiv.className = "task_delate_button";
     delateTaskDiv.style.backgroundImage = "url('../images/icon_x_mark.svg')"; 
     delateTaskDiv.addEventListener("click", function(){ delateTask(task.id); });
 
     var inputTaskDiv = document.createElement("div");
-    inputTaskDiv.className = "inputTaskDiv";
+    inputTaskDiv.className = "task_editing_form_div";
     inputTaskDiv.id = "inputTaskDiv"+task.id;
 
     var taskForm = document.createElement("form");
-    // taskForm.addEventListener("submit", function() {editTask(task.id); return false;});
     taskForm.onsubmit = function() {return editTask(task.id);};
 
     var taskEditInput = document.createElement("input");
     taskEditInput.type = "text";
     taskEditInput.value = task.text;
-    taskEditInput.className = 'inputFild';
+    taskEditInput.className = 'input_fild';
     taskEditInput.id="taskEditInput"+task.id;
-    taskEditInput.addEventListener("keyup", function() {cancelEditing(event, task.id);});
+    taskEditInput.addEventListener("keyup", function() {cancelEditing(event, task.id, task.text);});
 
     taskForm.appendChild(taskEditInput);
 
@@ -143,15 +142,11 @@ function rewriteTasks(id){
 }
 
 function startEditTask(id){
-    // if(isEditMod)
-    //     hideInput(id);
-    // else{
-        tasks.forEach(function(task){
-            if(task.id!=id)
-                hideInput(task.id);
-        });
-        showInput(id);
-    // }    
+    tasks.forEach(function(task){
+        if(task.id!=id)
+            hideInput(task.id);
+    });
+    showInput(id); 
 }
 
 function editTask(id){
@@ -160,7 +155,6 @@ function editTask(id){
 
     taskText = document.getElementById(editInputFildId).value;
     hideInput(id);
-    isEditMod = !isEditMod;
     document.getElementById(textTaskDivId).innerHTML = taskText;
     let apdatedTask = tasks.get(id);
     apdatedTask.text = taskText;
@@ -170,13 +164,10 @@ function editTask(id){
     return false;
 }
 
-function cancelEditing(event, id){
+function cancelEditing(event, id, text){
     if (event.keyCode === 27) {
-        // let inputTaskDivId = "inputTaskDiv"+id;
-        // let textTaskDivId = "textTaskDiv"+id;
-        // document.getElementById(inputTaskDivId).style.display = "none";
-        // document.getElementById(textTaskDivId).style.display = "block";
-        isEditMod = !isEditMod;
+        let editInputFildId = "taskEditInput"+id;
+        document.getElementById(editInputFildId).value = text;
         hideInput(id);
     }
 }
@@ -189,7 +180,6 @@ function showInput(id){
     document.getElementById(inputTaskDivId).style.display = "block";
     document.getElementById(editInputFildId).focus();
     document.getElementById(textTaskDivId).style.display = "none";
-    isEditMod = !isEditMod;
 } 
 
 function hideInput(id){

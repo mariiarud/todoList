@@ -16,15 +16,14 @@ td {
     vertical-align: top;
     min-height: 5em;
     padding: 1em;
-    border-bottom: 1px solid #d3d3d3; 
-   }
-/* 
-td:hover{
-    border-top: 1px solid #d3d3d3; 
-    border-bottom: 1px solid #d3d3d3; 
-} */
 
-.taskDiv{
+   }
+
+.task_table_td{
+    border-bottom: 1px solid #d3d3d3; 
+}
+
+.task_main_div{
     width: 100%;
     height: 100%;
     position: relative;
@@ -32,36 +31,37 @@ td:hover{
     cursor: text;
 }   
 
-.taskTextDiv{
+.task_text_div{
     float: left;
     width: 90%;
     height: 100%;
     display: block;
 }
 
-.inputTaskDiv{
+.task_editing_form_div{
     width: 90%;
     height: 100%;
     float: left;
     display: none;
 }
 
-.taskElementDiv{
+.task_element_div{
     width: 2em;
     float: left;
 }
 
-.taskControlButton{
+.task_delate_button{
     width: 1em;
     height: 1em;
     cursor: pointer;
     float: right;
+    background-image: url('../images/icon_x_mark.svg');
     background-position: center;
     background-repeat: no-repeat; 
     background-size:100% 100%;
 }
 
-.inputFild{
+.input_fild{
     width: 100%;
     height: 100%;
     border: none;
@@ -78,37 +78,38 @@ td:hover{
     width: 100%;
     border-radius: 0px;
     border: 1px solid #d3d3d3; 
+    padding: 0px;
     border-collapse: collapse;
-    box-shadow: none;
 }
 
-.listTr{
+.list_table_tr{
+    border: 1px solid #d3d3d3; 
     cursor: pointer;
 }
 
-.listElementBox{
+/* .list_table_tr :hover{
+    background-color: #e7e7e7;
+} */
+
+.list_main_div{
     width: 100%;
     height: 100%;
     position: relative;
 }
 
-.listControlButton{
-    float: right;
-    text-align: center;
+.delate_list_button{
     width: 1.5em;
     height: 1.5em;
+    float: right;
     cursor: pointer;
+    background-image: url('../images/icon_x_mark.svg');
     background-position: center;
     background-repeat: no-repeat; 
     background-size:100% 100%;
     visibility: hidden;
 }
 
-.listTd{
-    vertical-align: middle;
-}
-
-.nameListDiv{
+.list_name_div{
     float: left;
     width: 80%;
 }

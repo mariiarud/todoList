@@ -12,7 +12,7 @@ function createNewTaskList(){
         updateTaskTable();
         clearInputField();
         addNewElement(LISTS_URL, newTaskList);
-
+        changeList(newTaskList.id);
         saveChanges();
     }
     return false;
@@ -35,25 +35,25 @@ function createListInTable(list){
     let table = document.getElementById("listTable");
     var tr = table.insertRow();
     var td = tr.insertCell();
-    tr.className = "listTr";
+    tr.className = "list_table_tr";
     tr.id = "listTr"+list.id;
     tr.addEventListener("mouseover", function(){ displayControlButton(list.id); }); 
     tr.addEventListener("mouseout", function(){ hideControlButton(list.id); }); 
+    td.id = "listTd"+list.id;
     td.appendChild(createTaskListDivElement(list));
-    td.addEventListener("click", function(){ currentTaskListId = list.id; updateTaskTable()}); 
+    td.addEventListener("click", function(){ changeList(list.id)}); 
 }
 
 function createTaskListDivElement(list){
     let listElementBox = document.createElement("div");
-    listElementBox.className = "listElementBox";
+    listElementBox.className = "list_main_div";
 
     let listNameDiv = document.createElement("div");
-    listNameDiv.className = "nameListDiv";
+    listNameDiv.className = "list_name_div";
     listNameDiv.innerHTML = list.name;
 
     let delateListDiv = document.createElement("div");
-    delateListDiv.className = "listControlButton";
-    delateListDiv.style.backgroundImage = "url('../images/icon_x_mark.svg')"; 
+    delateListDiv.className = "delate_list_button";
     delateListDiv.addEventListener("click", function(event){ delateList(list.id); event.stopPropagation();});
     delateListDiv.id = "delateListDiv"+list.id;
 
@@ -62,7 +62,16 @@ function createTaskListDivElement(list){
     return listElementBox;
 }
 
-function selectList(){}
+function changeList(id){
+    taskLists.forEach(function(list){
+        let trId = "listTr"+list.id;
+        if(list.id!=id)
+            document.getElementById(trId).style = "background-color: #fff;";
+    });
+    currentTaskListId = id; 
+    selectCurrentList();
+    updateTaskTable()
+}
 
 function displayControlButton(id){
     let tskId = "delateListDiv"+id;
@@ -86,6 +95,19 @@ function delateList(id){
         currentTaskListId = taskLists.values().next().value.id;
         tasks = rewriteTasks(id);
         updateTaskTable();
+        changeList(currentTaskListId);
     }
-    saveChanges();
+    // saveChanges();
+}
+
+function selectFirstList(){
+    currentTaskListId = taskLists.values().next().value.id;
+    updateListTable();
+    updateTaskTable();
+    selectCurrentList()
+}
+
+function selectCurrentList(){
+    let trId = "listTr"+currentTaskListId;
+    document.getElementById(trId).style = "background-color: #a3f5f8;";
 }
