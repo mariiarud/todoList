@@ -8,7 +8,8 @@ function createNewTask(){
         let newTask = createTask(taskText);
         tasks.set(newTask.id, newTask);
         createTaskInTable(newTask);
-        clearInputFild();
+        clearInputField();
+        addNewElement(TASKS_URL, newTask);
 
         saveChanges();
     }
@@ -62,7 +63,7 @@ function createTaskDivElement(task){
     
     let textTaskDiv = document.createElement("div");
     textTaskDiv.className = "taskTextDiv";
-    textTaskDiv.innerHTML = task.taskText;
+    textTaskDiv.innerHTML = task.text;
     textTaskDiv.id = "textTaskDiv"+task.id;
     textTaskDiv.addEventListener("click", function() { startEditTask(task.id);} );
 
@@ -76,11 +77,12 @@ function createTaskDivElement(task){
     inputTaskDiv.id = "inputTaskDiv"+task.id;
 
     var taskForm = document.createElement("form");
-    taskForm.addEventListener("submit", function() {editTask(task.id);});
+    // taskForm.addEventListener("submit", function() {editTask(task.id); return false;});
+    taskForm.onsubmit = function() {return editTask(task.id);};
 
     var taskEditInput = document.createElement("input");
     taskEditInput.type = "text";
-    taskEditInput.value = task.taskText;
+    taskEditInput.value = task.text;
     taskEditInput.className = 'inputFild';
     taskEditInput.id="taskEditInput"+task.id;
     taskEditInput.addEventListener("keyup", function() {cancelEditing(event, task.id);});
@@ -97,7 +99,7 @@ function createTaskDivElement(task){
     return mainDiv;
 }
 
-function clearInputFild(){
+function clearInputField(){
     document.getElementById("newTask").value = "";
     document.getElementById("newList").value = "";
 }
@@ -107,20 +109,24 @@ function clearTable(table){
 }
 
 function checkTask(id){
+    let textTaskDivId = "textTaskDiv"+id;
     if(tasks.get(id).isCompleted){
         tasks.get(id).isCompleted = false;
+        // document.getElementById(textTaskDivId).innerHTML = tasks.get(id).text;
     }
     else {
         tasks.get(id).isCompleted = true;
+        // document.getElementById(textTaskDivId).innerHTML = "<del>"+tasks.get(id).text+"</del>";
     }
+    putElement(TASKS_URL, tasks.get(id));
     saveChanges();
 }
 
 function delateTask(id){
+    deleteElementById(TASKS_URL, id);
     let trId = "taskTr"+id;
     let tr = document.getElementById(trId);
     tr.parentNode.removeChild(tr);
-
     tasks.delete(id);
     saveChanges();
 }
@@ -130,54 +136,68 @@ function rewriteTasks(id){
     tasks.forEach(function(task){
         if(task.parentId!=id)
             newTasks.set(task.id, task);
+        else
+            deleteElementById(TASKS_URL, task.id);
     });
     return newTasks;
 }
 
 function startEditTask(id){
-    let inputTaskDivId = "inputTaskDiv"+id;
-    let textTaskDivId = "textTaskDiv"+id;
-    let editInputFildId = "taskEditInput"+id;
-
-    let inputTaskDiv = document.getElementById(inputTaskDivId);
-    let textTaskDiv = document.getElementById(textTaskDivId);
-    let editInputFild = document.getElementById(editInputFildId);
-
-    if(!isEditMod){
-        inputTaskDiv.style.display = "block";
-        editInputFild.focus();
-        textTaskDiv.style.display = "none";
-    }
-    else{
-        inputTaskDiv.style.display = "none";
-        textTaskDiv.style.display = "block";
-    }
-
-    isEditMod =!isEditMod;
+    // if(isEditMod)
+    //     hideInput(id);
+    // else{
+        tasks.forEach(function(task){
+            if(task.id!=id)
+                hideInput(task.id);
+        });
+        showInput(id);
+    // }    
 }
 
 function editTask(id){
     let editInputFildId = "taskEditInput"+id;
-    let inputTaskDivId = "inputTaskDiv"+id;
+    let textTaskDivId = "textTaskDiv"+id;
 
     taskText = document.getElementById(editInputFildId).value;
-    document.getElementById(inputTaskDivId).innerHTML = taskText;
-
+    hideInput(id);
+    isEditMod = !isEditMod;
+    document.getElementById(textTaskDivId).innerHTML = taskText;
     let apdatedTask = tasks.get(id);
-    apdatedTask.taskText = taskText;
+    apdatedTask.text = taskText;
     tasks.set(id, apdatedTask);
-
+    putElement(TASKS_URL, apdatedTask);
     saveChanges();
     return false;
 }
 
 function cancelEditing(event, id){
     if (event.keyCode === 27) {
-        let inputTaskDivId = "inputTaskDiv"+id;
-        let textTaskDivId = "textTaskDiv"+id;
-        document.getElementById(inputTaskDivId).style.display = "none";;
-        document.getElementById(textTaskDivId).style.display = "block";
+        // let inputTaskDivId = "inputTaskDiv"+id;
+        // let textTaskDivId = "textTaskDiv"+id;
+        // document.getElementById(inputTaskDivId).style.display = "none";
+        // document.getElementById(textTaskDivId).style.display = "block";
+        isEditMod = !isEditMod;
+        hideInput(id);
     }
+}
+
+function showInput(id){
+    let inputTaskDivId = "inputTaskDiv"+id;
+    let textTaskDivId = "textTaskDiv"+id;
+    let editInputFildId = "taskEditInput"+id;
+
+    document.getElementById(inputTaskDivId).style.display = "block";
+    document.getElementById(editInputFildId).focus();
+    document.getElementById(textTaskDivId).style.display = "none";
+    isEditMod = !isEditMod;
+} 
+
+function hideInput(id){
+    let inputTaskDivId = "inputTaskDiv"+id;
+    let textTaskDivId = "textTaskDiv"+id;
+
+    document.getElementById(inputTaskDivId).style.display = "none";
+    document.getElementById(textTaskDivId).style.display = "block";
 }
 
 function generateId() {

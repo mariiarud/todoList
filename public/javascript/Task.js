@@ -1,8 +1,8 @@
 class Task{
-    constructor(id, taskText, parentId) {
+    constructor(id, text, parentId) {
         this.id = id;
         this.parentId = parentId
-        this.taskText = taskText;
+        this.text = text;
         this.isCompleted = false;
     }
 }

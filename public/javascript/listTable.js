@@ -10,7 +10,8 @@ function createNewTaskList(){
         currentTaskListId = newTaskList.id;
         createListInTable(newTaskList);
         updateTaskTable();
-        clearInputFild();
+        clearInputField();
+        addNewElement(LISTS_URL, newTaskList);
 
         saveChanges();
     }
@@ -39,27 +40,29 @@ function createListInTable(list){
     tr.addEventListener("mouseover", function(){ displayControlButton(list.id); }); 
     tr.addEventListener("mouseout", function(){ hideControlButton(list.id); }); 
     td.appendChild(createTaskListDivElement(list));
+    td.addEventListener("click", function(){ currentTaskListId = list.id; updateTaskTable()}); 
 }
 
 function createTaskListDivElement(list){
-    let taskControlBox = document.createElement("div");
-    taskControlBox.className = "listControlBox";
+    let listElementBox = document.createElement("div");
+    listElementBox.className = "listElementBox";
 
     let listNameDiv = document.createElement("div");
-    listNameDiv.className = "taskTextDiv";
+    listNameDiv.className = "nameListDiv";
     listNameDiv.innerHTML = list.name;
-    listNameDiv.addEventListener("click", function(){ currentTaskListId = list.id; updateTaskTable()}); 
 
     let delateListDiv = document.createElement("div");
     delateListDiv.className = "listControlButton";
     delateListDiv.style.backgroundImage = "url('../images/icon_x_mark.svg')"; 
-    delateListDiv.addEventListener("click", function(){ delateList(list.id); });
+    delateListDiv.addEventListener("click", function(event){ delateList(list.id); event.stopPropagation();});
     delateListDiv.id = "delateListDiv"+list.id;
 
-    taskControlBox.appendChild(delateListDiv);
-    taskControlBox.appendChild(listNameDiv);
-    return taskControlBox;
+    listElementBox.appendChild(listNameDiv);
+    listElementBox.appendChild(delateListDiv);
+    return listElementBox;
 }
+
+function selectList(){}
 
 function displayControlButton(id){
     let tskId = "delateListDiv"+id;
@@ -72,6 +75,7 @@ function hideControlButton(id){
 }
 
 function delateList(id){
+    deleteElementById(LISTS_URL, id);
     taskLists.delete(id);
 
     let trId = "listTr"+id;

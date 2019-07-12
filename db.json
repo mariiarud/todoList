@@ -1,14 +1,32 @@
 {
-  "lists": [],
+  "lists": [
+    {
+      "id": "_jmpmtncvn",
+      "name": "fg sfdgfsdg dfg"
+    },
+    {
+      "id": "_84aav2ejs",
+      "name": "dafdf"
+    }
+  ],
   "tasks": [
     {
-      "element": {
-        "id": "_gtgh3tcef",
-        "parentId": "_6diiwbbib",
-        "taskText": "das fdasf",
-        "isCompleted": false
-      },
-      "id": 1
+      "id": "_wt3zb7crw",
+      "parentId": "_jmpmtncvn",
+      "text": "Task 1 v3 dfsf",
+      "isCompleted": false
+    },
+    {
+      "id": "_lyw7u7rw2",
+      "parentId": "_jmpmtncvn",
+      "text": "Task 2 v2",
+      "isCompleted": false
+    },
+    {
+      "id": "_fsdwsvs15",
+      "parentId": "_jmpmtncvn",
+      "text": "dasf dsfdd dsafdsf safds",
+      "isCompleted": false
     }
   ]
 }

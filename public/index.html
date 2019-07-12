@@ -11,28 +11,30 @@
 <body onload="loadTasks()">
     <div style="text-align: center;">
         <div id="lists">
-            <div>
-                <form onSubmit="return createNewTaskList()">
-                        <input type="text" id="newList" name="newList" >
-                        <input type="submit" value="+">
-                </form>
-            </div>
+            <h2>Lists</h2>
             <div style="text-align:center">
                     <table id="listTable" class="tasksTable">
                     </table>
             </div>
-        </div>
-        <div id="taskList">
-            <div style="text-align:center;">
-                <h2 id="listName"></h2>
-                <form onSubmit="return createNewTask()">
-                    <input type="text" id="newTask" name="newTask" size="45">
-                    <input type="submit" value="+">
+            <div>
+                <form onSubmit="return createNewTaskList()">
+                        <input type="text" id="newList" name="newList" >
+                        <input type="submit" value="Add">
                 </form>
             </div>
+        </div>
+        <div id="tasks">
+            <h2>Tasks</h2>
+            <h2 id="listName"></h2>
             <div style="text-align:center">
-                <table id="tasksTable" class="tasksTable">
-                </table>
+                    <table id="tasksTable" class="tasksTable">
+                    </table>
+            </div>
+            <div style="text-align:center; width: 100%;">
+                <form onSubmit="return createNewTask()">
+                    <input type="text" id="newTask" name="newTask" size="45">
+                    <input type="submit" value="Add">
+                </form>
             </div>
         </div>
     </div>
