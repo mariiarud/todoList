@@ -37,6 +37,24 @@ function putDataById(url = '', id = '' , data = {}) {
     .then(response => response.json()); 
 }
 
+function addNewElement(url, element){
+    postData(url, element)
+    .then(data => console.log(JSON.stringify(data)))
+    .catch(error => console.error(error));
+}
+
+function deleteElementById(url, id){
+    deleteDataById(url, id)
+    .then(data => console.log("Delete element by Id: "+id))
+    .catch(error => console.error(error));
+}
+
+function putElement(url, element){
+    putDataById(url, element.id, element)
+    .then(data => console.log(JSON.stringify(data)))
+    .catch(error => console.error(error));
+}
+
 function getTasks(url){
     getData(url)
     .then((data) => {
@@ -60,24 +78,6 @@ function getLists(url){
             selectFirstList();
         }
     })
-    .catch(error => console.error(error));
-}
-
-function addNewElement(url, element){
-    postData(url, element)
-    .then(data => console.log(JSON.stringify(data)))
-    .catch(error => console.error(error));
-}
-
-function deleteElementById(url, id){
-    deleteDataById(url, id)
-    .then(data => console.log("Delete element by Id: "+id))
-    .catch(error => console.error(error));
-}
-
-function putElement(url, element){
-    putDataById(url, element.id, element)
-    .then(data => console.log(JSON.stringify(data)))
     .catch(error => console.error(error));
 }
 

@@ -11,9 +11,8 @@ function createNewTaskList(){
         createListInTable(newTaskList);
         updateTaskTable();
         clearInputField();
-        addNewElement(LISTS_URL, newTaskList);
         changeList(newTaskList.id);
-        saveChanges();
+        addNewElement(LISTS_URL, newTaskList);
     }
     return false;
 }

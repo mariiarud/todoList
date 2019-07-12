@@ -9,8 +9,6 @@ function createNewTask(){
         createTaskInTable(newTask);
         clearInputField();
         addNewElement(TASKS_URL, newTask);
-
-        saveChanges();
     }
     return false;
 }
@@ -69,7 +67,6 @@ function createTaskDivElement(task){
 
     var delateTaskDiv = document.createElement("div");
     delateTaskDiv.className = "task_delate_button";
-    delateTaskDiv.style.backgroundImage = "url('../images/icon_x_mark.svg')"; 
     delateTaskDiv.addEventListener("click", function(){ delateTask(task.id); });
 
     var inputTaskDiv = document.createElement("div");
