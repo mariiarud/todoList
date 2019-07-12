@@ -1,5 +1,5 @@
 var tasks = new Map();
-const TASKS_URL = "http://localhost:3000/tasks"
+const TASKS_URL = "http://localhost:3000/tasks";
 
 function createNewTask(){
     taskText = document.getElementById("newTask").value;
@@ -63,7 +63,7 @@ function createTaskDivElement(task){
     
     let textTaskDiv = document.createElement("div");
     textTaskDiv.className = "task_text_div";
-    textTaskDiv.innerHTML = task.text;
+    textTaskDiv.innerHTML = getFormatedTaskText(task);
     textTaskDiv.id = "textTaskDiv"+task.id;
     textTaskDiv.addEventListener("click", function() { startEditTask(task.id);} );
 
@@ -98,6 +98,13 @@ function createTaskDivElement(task){
     return mainDiv;
 }
 
+function getFormatedTaskText(task){
+    if(task.isCompleted)
+        return "<del>"+task.text+"</del>";
+    else
+        return task.text;    
+}
+
 function clearInputField(){
     document.getElementById("newTask").value = "";
     document.getElementById("newList").value = "";
@@ -111,14 +118,13 @@ function checkTask(id){
     let textTaskDivId = "textTaskDiv"+id;
     if(tasks.get(id).isCompleted){
         tasks.get(id).isCompleted = false;
-        // document.getElementById(textTaskDivId).innerHTML = tasks.get(id).text;
     }
     else {
         tasks.get(id).isCompleted = true;
-        // document.getElementById(textTaskDivId).innerHTML = "<del>"+tasks.get(id).text+"</del>";
     }
+    document.getElementById(textTaskDivId).innerHTML = getFormatedTaskText(tasks.get(id));
     putElement(TASKS_URL, tasks.get(id));
-    saveChanges();
+    // saveChanges();
 }
 
 function delateTask(id){
@@ -127,7 +133,7 @@ function delateTask(id){
     let tr = document.getElementById(trId);
     tr.parentNode.removeChild(tr);
     tasks.delete(id);
-    saveChanges();
+    // saveChanges();
 }
 
 function rewriteTasks(id){
@@ -160,7 +166,7 @@ function editTask(id){
     apdatedTask.text = taskText;
     tasks.set(id, apdatedTask);
     putElement(TASKS_URL, apdatedTask);
-    saveChanges();
+    // saveChanges();
     return false;
 }
 

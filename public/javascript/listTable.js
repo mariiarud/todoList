@@ -1,6 +1,6 @@
 var taskLists = new Map();
 var currentTaskListId = "";
-const LISTS_URL = "http://localhost:3000/lists"
+const LISTS_URL = "http://localhost:3000/lists";
 
 function createNewTaskList(){
     listName = document.getElementById("newList").value;
