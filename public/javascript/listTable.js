@@ -43,6 +43,7 @@ function createListInTable(list){
     tr.id = "listTr"+list.id;
     tr.addEventListener("mouseover", function(){ displayControlButton(list.id); }); 
     tr.addEventListener("mouseout", function(){ hideControlButton(list.id); }); 
+    td.className = "list_table_td";
     td.id = "listTd"+list.id;
     td.appendChild(createTaskListDivElement(list));
     td.addEventListener("click", function(){ changeList(list.id)}); 
@@ -57,7 +58,7 @@ function createTaskListDivElement(list){
     listNameDiv.innerHTML = list.name;
 
     let delateListDiv = document.createElement("div");
-    delateListDiv.className = "delate_list_button";
+    delateListDiv.className = "delate_list_div";
     delateListDiv.addEventListener("click", function(event){ delateList(list.id); event.stopPropagation();});
     delateListDiv.id = "delateListDiv"+list.id;
 
@@ -70,13 +71,10 @@ function changeList(id){
     taskLists.forEach(function(list){
         let trId = "listTr"+list.id;
         if(list.id!=id)
-            document.getElementById(trId).style = "background-color: #fff;";
+            document.getElementById(trId).className = "list_table_tr";
     });
     currentTaskListId = id; 
-    console.log(currentTaskListId);
     getTasks();
-    // selectCurrentList();
-    // updateTaskTable()
 }
 
 function displayControlButton(id){
@@ -112,5 +110,5 @@ function selectList(){
 
 function selectCurrentList(){
     let trId = "listTr"+currentTaskListId;
-    document.getElementById(trId).style = "background-color: #a3f5f8;";
+    document.getElementById(trId).className = "selected_list_table_tr";
 }

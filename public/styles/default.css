@@ -1,21 +1,23 @@
 html, body {
     height: 100%;
+    margin: 0px;
 }
-.tasksTable { 
+h2{
+    font-family: Verdana, Arial, Helvetica, Courier, monospace;
+}
+table { 
     width: 60%;
     margin: 1em auto;
     text-align: left;
-    padding: 0.3em;
-    border-radius: 6px;
-    border: 1px solid #d3d3d3; 
-    box-shadow: 0 0 8px rgba(0,0,0,0.4);
+    /* padding: 0.3em; */
+    /* border-radius: 6px; */
+    /* border: 1px solid #d3d3d3;  */
+    /* box-shadow: 0 0 8px rgba(0,0,0,0.4); */
    }
 td { 
     width: 100%;
-    vertical-align: top;
     min-height: 5em;
     padding: 1em;
-
    }
 
 .task_table_td{
@@ -72,8 +74,6 @@ td {
     border-bottom: 1px solid #949494; 
     word-break: break-word;
 }
-
-
 
 #tasks{
     width: 80%;

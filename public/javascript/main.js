@@ -8,3 +8,48 @@ function generateId() {
   function isFieldEmpty(text){
     return text.split(' ').join('')=="";
 }
+
+document.addEventListener("keyup", keyDown, false);
+
+function keyDown(e) {
+  var keyCode = e.keyCode;
+  if(keyCode == 38){
+    choosePreviosList();
+  }
+  if(keyCode == 40){
+    chooseNextList();
+  }
+    // if(keyCode==13) {
+    // alert("You hit the enter key.");
+    // } else {
+    // alert("Oh no you didn't.");
+    // }
+  }
+
+  function choosePreviosList(){
+    let choosedList = taskLists.values().next().value.id;
+    taskLists.forEach(function(list){
+      if(currentTaskListId == list.id){
+        currentTaskListId =choosedList;
+        changeList(currentTaskListId);
+      }
+      choosedList = list.id;
+    });
+    console.log(taskLists.get(currentTaskListId).id);
+  }
+
+  function chooseNextList(){
+    let values = taskLists.values();
+    let choosedList = currentTaskListId;
+    taskLists.forEach(function(list){
+      if(choosedList == currentTaskListId){
+        values.next().value.id;
+        if(currentTaskListId == list.id){
+          currentTaskListId = values.next().value.id;
+          console.log(currentTaskListId);
+          changeList(currentTaskListId);
+        }
+      }
+    });
+    console.log(taskLists.get(currentTaskListId).id);
+  }
