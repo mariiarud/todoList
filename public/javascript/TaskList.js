@@ -1,6 +1,5 @@
 class TaskList{
-    constructor(id, name) {
-        this.id = id;
+    constructor( name) {
         this.name = name;
     }
 }

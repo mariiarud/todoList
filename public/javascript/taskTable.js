@@ -1,22 +1,26 @@
 var tasks = new Map();
-const TASKS_URL = "http://localhost:3000/tasks";
+const TASKS_URL = "http://localhost:8080/tasks";
 
 function createNewTask(){
     taskText = document.getElementById("newTask").value;
-    if(taskText!=""){
+    if(!isFieldEmpty(taskText)){
         let newTask = createTask(taskText);
-        tasks.set(newTask.id, newTask);
-        createTaskInTable(newTask);
+        postData(TASKS_URL, newTask)
+            .then(data => addNewTask(data))
+            .catch(error => console.error(error));
         clearInputField();
-        addNewElement(TASKS_URL, newTask);
-
-        saveChanges();
     }
     return false;
 }
 
+function addNewTask(newTask){
+    console.log(newTask);
+    tasks.set(newTask.id, newTask);
+    createTaskInTable(newTask);
+}
+
 function createTask(taskText){
-    let newTask = new Task(generateId(), taskText, currentTaskListId);
+    let newTask = new Task(currentTaskListId, taskText);
     return newTask;
 }
 
@@ -24,7 +28,7 @@ function updateTaskTable(){
     document.getElementById("listName").innerHTML = taskLists.get(currentTaskListId).name;
     let table = document.getElementById("tasksTable");
     clearTable(table);
-    var tasks = getCurrentTasks();
+    // var tasks = getCurrentTasks();
     tasks.forEach(function(task) {
         createTaskInTable(task);
     });
@@ -39,14 +43,14 @@ function createTaskInTable(task){
     td.appendChild(createTaskDivElement(task));
 }
 
-function getCurrentTasks(){
-    var currentTaskList = new Map();
-    tasks.forEach(function(task){
-        if(task.parentId == currentTaskListId)
-            currentTaskList.set(task.id, task);
-    });
-    return currentTaskList;
-}
+// function getCurrentTasks(){
+//     var currentTaskList = new Map();
+//     tasks.forEach(function(task){
+//         if(task.parentId == currentTaskListId)
+//             currentTaskList.set(task.id, task);
+//     });
+//     return currentTaskList;
+// }
 
 function createTaskDivElement(task){
     var mainDiv = document.createElement("div");
@@ -58,18 +62,24 @@ function createTaskDivElement(task){
     var taskCompletedCheck = document.createElement("input");
     taskCompletedCheck.className = "task_completed_checkbox";
     taskCompletedCheck.type = "checkbox";
-    taskCompletedCheck.checked = task.isCompleted;
+    taskCompletedCheck.checked = task.completed;
     taskCompletedCheck.addEventListener("click", function(){ checkTask(task.id); });
     
+// {/* <span class="checkmark"></span> */}
+    var spanChackMark = document.createElement("span");
+    spanChackMark.className = "checkmark";
+
     let textTaskDiv = document.createElement("div");
     textTaskDiv.className = "task_text_div";
     textTaskDiv.innerHTML = getFormatedTaskText(task);
     textTaskDiv.id = "textTaskDiv"+task.id;
     textTaskDiv.addEventListener("click", function() { startEditTask(task.id);} );
 
+    var label = document.createElement("label");
+    label.className = "container";
+
     var delateTaskDiv = document.createElement("div");
     delateTaskDiv.className = "task_delate_button";
-    delateTaskDiv.style.backgroundImage = "url('../images/icon_x_mark.svg')"; 
     delateTaskDiv.addEventListener("click", function(){ delateTask(task.id); });
 
     var inputTaskDiv = document.createElement("div");
@@ -89,7 +99,10 @@ function createTaskDivElement(task){
     taskForm.appendChild(taskEditInput);
 
     inputTaskDiv.appendChild(taskForm);
-    taskElementDiv.appendChild(taskCompletedCheck);
+    label.appendChild(taskCompletedCheck);
+    label.appendChild(spanChackMark);
+    
+    taskElementDiv.appendChild(label);
 
     mainDiv.appendChild(taskElementDiv);
     mainDiv.appendChild(textTaskDiv);
@@ -99,8 +112,8 @@ function createTaskDivElement(task){
 }
 
 function getFormatedTaskText(task){
-    if(task.isCompleted)
-        return "<del>"+task.text+"</del>";
+    if(task.completed)
+        return "<del style='color:#808080;'>"+task.text+"</del>";
     else
         return task.text;    
 }
@@ -115,16 +128,19 @@ function clearTable(table){
 }
 
 function checkTask(id){
+
+
     let textTaskDivId = "textTaskDiv"+id;
-    if(tasks.get(id).isCompleted){
-        tasks.get(id).isCompleted = false;
+    if(tasks.get(id).completed){
+        tasks.get(id).completed = false;
     }
     else {
-        tasks.get(id).isCompleted = true;
+        tasks.get(id).completed = true;
     }
     document.getElementById(textTaskDivId).innerHTML = getFormatedTaskText(tasks.get(id));
-    putElement(TASKS_URL, tasks.get(id));
-    // saveChanges();
+
+    patchElement(TASKS_URL, tasks.get(id));
+
 }
 
 function delateTask(id){
@@ -133,7 +149,6 @@ function delateTask(id){
     let tr = document.getElementById(trId);
     tr.parentNode.removeChild(tr);
     tasks.delete(id);
-    // saveChanges();
 }
 
 function rewriteTasks(id){
@@ -149,7 +164,7 @@ function rewriteTasks(id){
 
 function startEditTask(id){
     tasks.forEach(function(task){
-        if(task.id!=id)
+        if(task.id!=id && task.parentId==currentTaskListId)
             hideInput(task.id);
     });
     showInput(id); 
@@ -160,13 +175,18 @@ function editTask(id){
     let textTaskDivId = "textTaskDiv"+id;
 
     taskText = document.getElementById(editInputFildId).value;
+    if(!isFieldEmpty(taskText)){
+        hideInput(id);
+        let apdatedTask = tasks.get(id);
+        apdatedTask.text = taskText;
+        tasks.set(id, apdatedTask);
+        document.getElementById(textTaskDivId).innerHTML = getFormatedTaskText(tasks.get(id));
+        patchElement(TASKS_URL, apdatedTask);
+    }
+    else{
+        document.getElementById(editInputFildId).value = tasks.get(id).text;
+    }
     hideInput(id);
-    document.getElementById(textTaskDivId).innerHTML = taskText;
-    let apdatedTask = tasks.get(id);
-    apdatedTask.text = taskText;
-    tasks.set(id, apdatedTask);
-    putElement(TASKS_URL, apdatedTask);
-    // saveChanges();
     return false;
 }
 
@@ -196,9 +216,3 @@ function hideInput(id){
     document.getElementById(textTaskDivId).style.display = "block";
 }
 
-function generateId() {
-    // Math.random should be unique because of its seeding algorithm.
-    // Convert it to base 36 (numbers + letters), and grab the first 9 characters
-    // after the decimal.
-    return '_' + Math.random().toString(36).substr(2, 9);
-  }

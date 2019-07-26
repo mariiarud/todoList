@@ -1,25 +1,29 @@
 var taskLists = new Map();
 var currentTaskListId = "";
-const LISTS_URL = "http://localhost:3000/lists";
+const LISTS_URL = "http://localhost:8080/lists";
 
 function createNewTaskList(){
     listName = document.getElementById("newList").value;
-    if(listName!=""){
+    if(!isFieldEmpty(listName)){
         let newTaskList = createTaskList(listName);
-        taskLists.set(newTaskList.id, newTaskList);
-        currentTaskListId = newTaskList.id;
-        createListInTable(newTaskList);
-        updateTaskTable();
+        postData(LISTS_URL, newTaskList)
+            .then(data => addNewTaskList(data))
+            .catch(error => console.error(error));
         clearInputField();
-        addNewElement(LISTS_URL, newTaskList);
-        changeList(newTaskList.id);
-        saveChanges();
     }
     return false;
 }
 
+function addNewTaskList(newTaskList){
+    taskLists.set(newTaskList.id, newTaskList);
+    currentTaskListId = newTaskList.id;
+    createListInTable(newTaskList);
+    updateTaskTable();
+    changeList(newTaskList.id);
+}
+
 function createTaskList(listName){
-    let newTaskList = new TaskList(generateId(), listName);
+    let newTaskList = new TaskList(listName);
     return newTaskList;
 }
 
@@ -69,8 +73,9 @@ function changeList(id){
             document.getElementById(trId).style = "background-color: #fff;";
     });
     currentTaskListId = id; 
-    selectCurrentList();
-    updateTaskTable()
+    getTasks();
+    // selectCurrentList();
+    // updateTaskTable()
 }
 
 function displayControlButton(id){
@@ -97,14 +102,11 @@ function delateList(id){
         updateTaskTable();
         changeList(currentTaskListId);
     }
-    // saveChanges();
 }
 
-function selectFirstList(){
-    currentTaskListId = taskLists.values().next().value.id;
-    updateListTable();
+function selectList(){
+    selectCurrentList();
     updateTaskTable();
-    selectCurrentList()
 }
 
 function selectCurrentList(){

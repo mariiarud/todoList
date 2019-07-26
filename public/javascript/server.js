@@ -23,12 +23,13 @@ function deleteDataById(url = '', id = '') {
     return fetch(`${url}/${id}`, {
         method: 'DELETE'
     })
-    .then(response => response.json());
+    .then(response => console.log(response));
 }
 
-function putDataById(url = '', id = '' , data = {}) {
+
+function patchDataById(url = '', id = '' , data = {}) {
     return fetch(`${url}/${id}`, {
-        method: 'PUT',
+        method: 'PATCH',
         body: JSON.stringify(data),
         headers: {
             'Content-Type': 'application/json',
@@ -37,15 +38,14 @@ function putDataById(url = '', id = '' , data = {}) {
     .then(response => response.json()); 
 }
 
-function getTasks(url){
-    getData(url)
-    .then((data) => {
-        data.forEach(function(task){
-            console.log(task);
-            tasks.set(task.id, task);
-        });
+function getTasksByListId(url = '', id = 0){
+    return fetch(`${url}?parentId=${id}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }    
     })
-    .catch(error => console.error(error));
+    .then(response => response.json());
 }
 
 function getLists(url){
@@ -57,38 +57,64 @@ function getLists(url){
         });
 
         if(taskLists.size > 0){
-            selectFirstList();
+            currentTaskListId = taskLists.values().next().value.id;
+            updateListTable();
+            getTasks();
         }
     })
     .catch(error => console.error(error));
 }
 
-function addNewElement(url, element){
-    postData(url, element)
-    .then(data => console.log(JSON.stringify(data)))
+function getTasks(){
+    getTasksByListId(TASKS_URL, currentTaskListId)
+    .then((data) => {
+        data.forEach(function(task){
+            console.log(task);
+            tasks.set(task.id, task);
+        });
+        selectList();
+    })
     .catch(error => console.error(error));
 }
+
+// function addNewElement(url, element){
+//     postData(url, element)
+//     .then(data => console.log(JSON.stringify(data)))
+//     .catch(error => console.error(error));
+// }
+
+// function testAddNewElement(url, element){
+//     console.log(JSON.stringify(element));
+//     return postData(url, element);
+// }
 
 function deleteElementById(url, id){
     deleteDataById(url, id)
-    .then(data => console.log("Delete element by Id: "+id))
+    .then(console.log("Delete element by Id: "+id))
     .catch(error => console.error(error));
 }
 
-function putElement(url, element){
-    putDataById(url, element.id, element)
+function patchElement(url, element){
+    patchDataById(url, element.id, element)
     .then(data => console.log(JSON.stringify(data)))
     .catch(error => console.error(error));
 }
 
-// ///////////////////////////////////////////////////////////////////////////////
-
-// function saveChanges(){
-//     localStorage.myLists = JSON.stringify(Array.from(taskLists.entries()));
-//     localStorage.myTasks = JSON.stringify(Array.from(tasks.entries()));
-// }
-
 function loadTasks(){
-    getTasks(TASKS_URL);
+    tasks = new Map();
+    taskLists = new Map();
+
     getLists(LISTS_URL);
 }
+
+// function testFeath(element){
+//     console.log(JSON.stringify(element));
+//     fetch(
+//         'http://localhost:8080/lists',
+//         { 
+//           method: 'POST', 
+//           headers: { 'Content-Type': 'application/json' },
+//           body: JSON.stringify(element)
+//         }
+//       ).then(result => result.json().then(console.log));
+// }
