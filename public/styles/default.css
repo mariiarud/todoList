@@ -1,6 +1,5 @@
 html, body {
     height: 100%;
-
 }
 .tasksTable { 
     width: 60%;
@@ -74,53 +73,7 @@ td {
     word-break: break-word;
 }
 
-#listTable{
-    width: 100%;
-    border-radius: 0px;
-    border: 1px solid #d3d3d3; 
-    padding: 0px;
-    border-collapse: collapse;
-}
 
-.list_table_tr{
-    border: 1px solid #d3d3d3; 
-    cursor: pointer;
-}
-
-/* .list_table_tr :hover{
-    background-color: #e7e7e7;
-} */
-
-.list_main_div{
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
-
-.delate_list_button{
-    width: 1.5em;
-    height: 1.5em;
-    float: right;
-    cursor: pointer;
-    background-image: url('../images/icon_x_mark.svg');
-    background-position: center;
-    background-repeat: no-repeat; 
-    background-size:100% 100%;
-    visibility: hidden;
-}
-
-.list_name_div{
-    float: left;
-    width: 80%;
-}
-
-#lists{
-    width: 20%;
-    height: 100%;
-    float: left;
-    /* position: fixed; */
-    /* background-color: aquamarine;  */
-}
 
 #tasks{
     width: 80%;

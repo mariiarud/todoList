@@ -73,6 +73,7 @@ function changeList(id){
             document.getElementById(trId).style = "background-color: #fff;";
     });
     currentTaskListId = id; 
+    console.log(currentTaskListId);
     getTasks();
     // selectCurrentList();
     // updateTaskTable()

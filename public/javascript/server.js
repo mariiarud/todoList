@@ -66,6 +66,7 @@ function getLists(url){
 }
 
 function getTasks(){
+    tasks = new Map();
     getTasksByListId(TASKS_URL, currentTaskListId)
     .then((data) => {
         data.forEach(function(task){
@@ -101,7 +102,7 @@ function patchElement(url, element){
 }
 
 function loadTasks(){
-    tasks = new Map();
+    
     taskLists = new Map();
 
     getLists(LISTS_URL);
