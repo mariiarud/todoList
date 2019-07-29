@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+    <!-- <link rel="stylesheet" type="text/css" href="/styles/default.css"> -->
+    <!-- <link rel="stylesheet" type="text/css" href="./styles/customCheckBox.css">
+    <link rel="stylesheet" type="text/css" href="./styles/listTable.css">
+
+    <script src="./javascript/taskTable.js"></script>
+    <script src="./javascript/listTable.js"></script>
+    <script src="./javascript/server.js"></script>
+    <script src="./javascript/Task.js"></script>
+    <script src="./javascript/TaskList.js"></script> -->
+    <!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
+    <!-- <script src="./javascript/main.js"></script> -->
+</head>
+<body onload="start()">
+    <div style="text-align: center;">
+        <div id="lists">
+            <h2>Lists</h2>
+            <div style="text-align:center">
+                    <table id="listTable">
+                    </table>
+            </div>
+            <div>
+                <form onSubmit="return createNewTaskList()">
+                        <input type="text" id="newList" name="newList" >
+                        <input type="submit" value="Add">
+                </form>
+            </div>
+        </div>
+        <div id="tasks">
+            <h2>Tasks</h2>
+            <h2 id="listName"></h2>
+            <div style="text-align:center">
+                    <table id="tasksTable">
+                    </table>
+            </div>
+            <div style="text-align:center; width: 100%;">
+                <form onSubmit="return createNewTask()">
+                    <input type="text" id="newTask" name="newTask" size="45">
+                    <input type="submit" value="Add">
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
